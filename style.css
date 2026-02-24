@@ -195,6 +195,115 @@ header input::placeholder {
     transform: translateY(0);
 }
 
+/* Feedback Form Styles */
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #0b3d91;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+/* Star Rating Style */
+.rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.rating-input input {
+    display: none;
+}
+
+.rating-input label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.rating-input label:hover,
+.rating-input label:hover~label,
+.rating-input input:checked~label {
+    color: #FFD700;
+}
+
+/* Reviews Grid */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.98);
+    padding: 25px;
+    border-radius: 12px;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-top: 5px solid #FFD700;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.review-card h4 {
+    margin: 0;
+    color: #0b3d91;
+    font-size: 1.2rem;
+}
+
+.review-card .category {
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.review-card .rating-display {
+    color: #FFD700;
+    margin-bottom: 10px;
+}
+
+.review-card .comment {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #444;
+}
+
+.review-card .date {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 15px;
+    text-align: right;
+}
+
 .download-btn {
     display: inline-block;
     margin-top: 20px;

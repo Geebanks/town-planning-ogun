@@ -166,3 +166,87 @@ window.filterOffices = function () {
 
 // Initialize
 // document.addEventListener("DOMContentLoaded", showOffices); // Removed to hide cards on home page
+
+// Reviews & Feedback Logic
+const STORAGE_KEY = 'ogun_town_planning_reviews';
+
+window.loadReviews = function () {
+    const container = document.getElementById('reviewsList');
+    if (!container) return;
+
+    let reviews = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+        {
+            name: "Engr. Kunle Adewale",
+            category: "Building Permit Process",
+            rating: 5,
+            comment: "The processing time has improved significantly in the Abeokuta zonal office. Very professional staff.",
+            date: "2026-02-20"
+        },
+        {
+            name: "Arc. Simi Coker",
+            category: "Customer Service",
+            rating: 4,
+            comment: "Documentation requirements are now much clearer thanks to this portal. Keep it up.",
+            date: "2026-02-22"
+        }
+    ];
+
+    container.innerHTML = "";
+    reviews.slice().reverse().forEach(rev => {
+        const stars = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
+        container.innerHTML += `
+            <div class="review-card">
+                <h4>${rev.name}</h4>
+                <p class="category">${rev.category}</p>
+                <div class="rating-display">${stars}</div>
+                <p class="comment">"${rev.comment}"</p>
+                <p class="date">${rev.date}</p>
+            </div>
+        `;
+    });
+};
+
+const reviewForm = document.getElementById('reviewForm');
+if (reviewForm) {
+    reviewForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('reviewerName').value;
+        const category = document.getElementById('practiceCategory').value;
+        const comment = document.getElementById('reviewText').value;
+        const ratingInput = document.querySelector('input[name="rating"]:checked');
+        const status = document.getElementById('formStatus');
+
+        if (!ratingInput) {
+            status.style.color = "red";
+            status.innerText = "Please select a star rating.";
+            return;
+        }
+
+        const newReview = {
+            name: name,
+            category: category,
+            comment: comment,
+            rating: parseInt(ratingInput.value),
+            date: new Date().toISOString().split('T')[0]
+        };
+
+        // Save to local storage
+        let reviews = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        reviews.push(newReview);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+
+        // UI Feedback
+        status.style.color = "#FFD700";
+        status.innerText = "✅ Review posted successfully!";
+        reviewForm.reset();
+
+        // Refresh list
+        loadReviews();
+    });
+}
+
+// Initialize if on reviews page
+if (document.getElementById('reviewsList')) {
+    loadReviews();
+}

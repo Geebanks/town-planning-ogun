@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews & Feedback – Ogun State Town Planning</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">Planning Offices</a></li>
+            <li><a href="requirements.html">Permit Requirements</a></li>
+            <li><a href="nitp.html">NITP & Professional Bodies</a></li>
+            <li><a href="reviews.html" class="active">Reviews & Feedback</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>💬 Reviews & Feedback</h1>
+        <p class="subtitle">Share your experience with Town Planning practices in Ogun State</p>
+    </header>
+
+    <main class="requirements-container">
+        <!-- Feedback Form Section -->
+        <section class="request-section">
+            <div class="section-title">
+                <span class="icon">✍️</span>
+                <h2>Submit Your Review</h2>
+            </div>
+            <div class="info-card">
+                <form id="reviewForm" class="feedback-form">
+                    <div class="form-group">
+                        <label for="reviewerName">Your Name</label>
+                        <input type="text" id="reviewerName" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="practiceCategory">Category of Practice</label>
+                        <select id="practiceCategory" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Building Permit Process">Building Permit Process</option>
+                            <option value="Land Use Zoning">Land Use Zoning</option>
+                            <option value="Urban Design">Urban Design</option>
+                            <option value="Site Inspection">Site Inspection</option>
+                            <option value="Customer Service">Customer Service</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Rating</label>
+                        <div class="rating-input">
+                            <input type="radio" name="rating" value="5" id="r5"><label for="r5">★</label>
+                            <input type="radio" name="rating" value="4" id="r4"><label for="r4">★</label>
+                            <input type="radio" name="rating" value="3" id="r3"><label for="r3">★</label>
+                            <input type="radio" name="rating" value="2" id="r2"><label for="r2">★</label>
+                            <input type="radio" name="rating" value="1" id="r1"><label for="r1">★</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reviewText">Your Message</label>
+                        <textarea id="reviewText" rows="4" placeholder="Share the details of your experience..."
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" id="submitReviewBtn" class="download-btn"
+                        style="width: 100%; margin-top: 10px;">Post Review</button>
+                    <p id="formStatus" style="margin-top: 15px; text-align: center; font-weight: 500;"></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- Display Reviews Section -->
+        <section class="request-section">
+            <div class="section-title">
+                <span class="icon">🌟</span>
+                <h2>Recent Feedback</h2>
+            </div>
+            <div id="reviewsList" class="reviews-grid">
+                <!-- Reviews will be loaded here dynamically -->
+                <p style="text-align: center; color: #fff; width: 100%;">Loading reviews...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ogun State Planning Directory • Ministry of Physical Planning and Urban Development</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Local script to handle reviews if script.js is too crowded
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof loadReviews === 'function') {
+                loadReviews();
+            }
+        });
+    </script>
+</body>
+
+</html>
