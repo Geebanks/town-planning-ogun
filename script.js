@@ -167,32 +167,43 @@ window.filterOffices = function () {
 // Initialize
 // document.addEventListener("DOMContentLoaded", showOffices); // Removed to hide cards on home page
 
-// Initialize Realtime Database
-const db = firebase.database();
+// Initialize Realtime Database only if the SDK is present
+let db;
+try {
+    if (firebase.database) {
+        db = firebase.database();
+    }
+} catch (e) {
+    console.log("Database SDK not loaded on this page.");
+}
+
 const REVIEWS_NODE = 'reviews';
 
 window.loadReviews = function () {
+    if (!db) return;
     const container = document.getElementById('reviewsList');
     if (!container) return;
 
     // Real-time listener from Realtime Database
+    // We use orderByKey() because Firebase push() keys are chronological
     db.ref(REVIEWS_NODE)
+        .orderByKey()
         .limitToLast(20)
         .on('value', (snapshot) => {
             container.innerHTML = "";
 
             if (!snapshot.exists()) {
-                container.innerHTML = `<p style="text-align: center; color: #fff; width: 100%;">No reviews yet. Be the first to share your experience!</p>`;
+                container.innerHTML = `<div class="info-card" style="text-align: center;"><p>No reviews yet. Be the first to share your experience!</p></div>`;
                 return;
             }
 
-            const reviews = [];
+            const reviewsList = [];
             snapshot.forEach((childSnapshot) => {
-                reviews.push(childSnapshot.val());
+                reviewsList.push(childSnapshot.val());
             });
 
-            // Reverse to show newest first
-            reviews.reverse().forEach((rev) => {
+            // Reverse the array to show the most recent review at the top
+            reviewsList.reverse().forEach((rev) => {
                 const stars = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
                 container.innerHTML += `
                     <div class="review-card">
@@ -205,8 +216,13 @@ window.loadReviews = function () {
                 `;
             });
         }, (error) => {
-            console.error("Error fetching reviews: ", error);
-            container.innerHTML = `<p style="text-align: center; color: #ff6b6b; width: 100%;">Error loading reviews. Please ensure Realtime Database is enabled.</p>`;
+            console.error("Database connection error:", error);
+            container.innerHTML = `
+                <div class="error-message">
+                    <span class="icon">⚠️</span>
+                    <p>Database Error: Please ensure you have enabled "Realtime Database" in your Firebase console and set Rules to "Test Mode".</p>
+                </div>
+            `;
         });
 };
 
