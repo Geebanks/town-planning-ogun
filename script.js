@@ -167,28 +167,32 @@ window.filterOffices = function () {
 // Initialize
 // document.addEventListener("DOMContentLoaded", showOffices); // Removed to hide cards on home page
 
-// Initialize Firestore
-const db = firebase.firestore();
-const REVIEWS_COLLECTION = 'reviews';
+// Initialize Realtime Database
+const db = firebase.database();
+const REVIEWS_NODE = 'reviews';
 
 window.loadReviews = function () {
     const container = document.getElementById('reviewsList');
     if (!container) return;
 
-    // Real-time listener from Firestore
-    db.collection(REVIEWS_COLLECTION)
-        .orderBy('timestamp', 'desc') // Order by timestamp for most recent first
-        .limit(20)
-        .onSnapshot((snapshot) => {
+    // Real-time listener from Realtime Database
+    db.ref(REVIEWS_NODE)
+        .limitToLast(20)
+        .on('value', (snapshot) => {
             container.innerHTML = "";
 
-            if (snapshot.empty) {
+            if (!snapshot.exists()) {
                 container.innerHTML = `<p style="text-align: center; color: #fff; width: 100%;">No reviews yet. Be the first to share your experience!</p>`;
                 return;
             }
 
-            snapshot.forEach((doc) => {
-                const rev = doc.data();
+            const reviews = [];
+            snapshot.forEach((childSnapshot) => {
+                reviews.push(childSnapshot.val());
+            });
+
+            // Reverse to show newest first
+            reviews.reverse().forEach((rev) => {
                 const stars = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
                 container.innerHTML += `
                     <div class="review-card">
@@ -202,7 +206,7 @@ window.loadReviews = function () {
             });
         }, (error) => {
             console.error("Error fetching reviews: ", error);
-            container.innerHTML = `<p style="text-align: center; color: #ff6b6b; width: 100%;">Error loading reviews. Please ensure Firestore is enabled.</p>`;
+            container.innerHTML = `<p style="text-align: center; color: #ff6b6b; width: 100%;">Error loading reviews. Please ensure Realtime Database is enabled.</p>`;
         });
 };
 
@@ -230,7 +234,7 @@ if (reviewForm) {
             comment: comment,
             rating: parseInt(ratingInput.value),
             date: new Date().toISOString().split('T')[0],
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
         // Disable button while sending
@@ -238,8 +242,8 @@ if (reviewForm) {
         status.style.color = "#FFD700";
         status.innerText = "Processing your review...";
 
-        // Save to Firestore
-        db.collection(REVIEWS_COLLECTION).add(newReview)
+        // Save to Realtime Database
+        db.ref(REVIEWS_NODE).push(newReview)
             .then(() => {
                 // UI Feedback
                 status.style.color = "#FFD700";
@@ -255,7 +259,7 @@ if (reviewForm) {
             .catch((error) => {
                 console.error("Error adding review: ", error);
                 status.style.color = "#ff6b6b";
-                status.innerText = "❌ Error: Could not save to cloud. Ensure Firestore rules are set to public.";
+                status.innerText = "❌ Error: Could not save to cloud. Ensure Realtime Database rules are set to public.";
                 submitBtn.disabled = false;
             });
     });
