@@ -2,6 +2,7 @@
 const firebaseConfig = {
     apiKey: "AIzaSyAZ1EwPZMQjprqncxo04DUPG4BL0srvlms",
     authDomain: "town-planning-offices-in-ogun.firebaseapp.com",
+    databaseURL: "https://town-planning-offices-in-ogun-default-rtdb.firebaseio.app/",
     projectId: "town-planning-offices-in-ogun",
     storageBucket: "town-planning-offices-in-ogun.firebasestorage.app",
     messagingSenderId: "1049699052908",
