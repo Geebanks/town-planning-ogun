@@ -257,3 +257,12 @@ if (reviewForm) {
 if (document.getElementById('reviewsList')) {
     loadReviews();
 }
+
+// Register Service Worker for PWA (Installable App)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker Registered!', reg))
+            .catch(err => console.log('Service Worker registration failed: ', err));
+    });
+}
