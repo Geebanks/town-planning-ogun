@@ -5,6 +5,7 @@ const ASSETS = [
     '/requirements.html',
     '/nitp.html',
     '/reviews.html',
+    '/about.html',
     '/style.css',
     '/script.js',
     '/manifest.json'

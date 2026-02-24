@@ -167,43 +167,43 @@ window.filterOffices = function () {
 // Initialize
 // document.addEventListener("DOMContentLoaded", showOffices); // Removed to hide cards on home page
 
-// Reviews & Feedback Logic
-const STORAGE_KEY = 'ogun_town_planning_reviews';
+// Initialize Firestore
+const db = firebase.firestore();
+const REVIEWS_COLLECTION = 'reviews';
 
 window.loadReviews = function () {
     const container = document.getElementById('reviewsList');
     if (!container) return;
 
-    let reviews = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-        {
-            name: "Engr. Kunle Adewale",
-            category: "Building Permit Process",
-            rating: 5,
-            comment: "The processing time has improved significantly in the Abeokuta zonal office. Very professional staff.",
-            date: "2026-02-20"
-        },
-        {
-            name: "Arc. Simi Coker",
-            category: "Customer Service",
-            rating: 4,
-            comment: "Documentation requirements are now much clearer thanks to this portal. Keep it up.",
-            date: "2026-02-22"
-        }
-    ];
+    // Real-time listener from Firestore
+    db.collection(REVIEWS_COLLECTION)
+        .orderBy('timestamp', 'desc') // Order by timestamp for most recent first
+        .limit(20)
+        .onSnapshot((snapshot) => {
+            container.innerHTML = "";
 
-    container.innerHTML = "";
-    reviews.slice().reverse().forEach(rev => {
-        const stars = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
-        container.innerHTML += `
-            <div class="review-card">
-                <h4>${rev.name}</h4>
-                <p class="category">${rev.category}</p>
-                <div class="rating-display">${stars}</div>
-                <p class="comment">"${rev.comment}"</p>
-                <p class="date">${rev.date}</p>
-            </div>
-        `;
-    });
+            if (snapshot.empty) {
+                container.innerHTML = `<p style="text-align: center; color: #fff; width: 100%;">No reviews yet. Be the first to share your experience!</p>`;
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const rev = doc.data();
+                const stars = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
+                container.innerHTML += `
+                    <div class="review-card">
+                        <h4>${rev.name}</h4>
+                        <p class="category">${rev.category}</p>
+                        <div class="rating-display">${stars}</div>
+                        <p class="comment">"${rev.comment}"</p>
+                        <p class="date">${rev.date}</p>
+                    </div>
+                `;
+            });
+        }, (error) => {
+            console.error("Error fetching reviews: ", error);
+            container.innerHTML = `<p style="text-align: center; color: #ff6b6b; width: 100%;">Error loading reviews. Please ensure Firestore is enabled.</p>`;
+        });
 };
 
 const reviewForm = document.getElementById('reviewForm');
@@ -216,6 +216,7 @@ if (reviewForm) {
         const comment = document.getElementById('reviewText').value;
         const ratingInput = document.querySelector('input[name="rating"]:checked');
         const status = document.getElementById('formStatus');
+        const submitBtn = document.getElementById('submitReviewBtn');
 
         if (!ratingInput) {
             status.style.color = "red";
@@ -228,28 +229,35 @@ if (reviewForm) {
             category: category,
             comment: comment,
             rating: parseInt(ratingInput.value),
-            date: new Date().toISOString().split('T')[0]
+            date: new Date().toISOString().split('T')[0],
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // Save to local storage
-        let reviews = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        reviews.push(newReview);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
-
-        // Send Email Notification (using mailto for simplicity since we don't have a backend)
-        const emailBody = `New Review Received!\n\nName: ${newReview.name}\nCategory: ${newReview.category}\nRating: ${newReview.rating} Stars\nReview: ${newReview.comment}\n\nDate: ${newReview.date}`;
-        const mailtoLink = `mailto:bankolegabriel91@yahoo.com?subject=New Town Planning Review from ${newReview.name}&body=${encodeURIComponent(emailBody)}`;
-
-        // UI Feedback
+        // Disable button while sending
+        submitBtn.disabled = true;
         status.style.color = "#FFD700";
-        status.innerText = "✅ Review posted successfully! Opening your email client to notify the admin...";
-        reviewForm.reset();
+        status.innerText = "Processing your review...";
 
-        // Refresh list
-        loadReviews();
+        // Save to Firestore
+        db.collection(REVIEWS_COLLECTION).add(newReview)
+            .then(() => {
+                // UI Feedback
+                status.style.color = "#FFD700";
+                status.innerText = "✅ Review posted successfully to the cloud!";
+                reviewForm.reset();
+                submitBtn.disabled = false;
 
-        // Trigger email client
-        window.location.href = mailtoLink;
+                // Send Email Notification (mailto)
+                const emailBody = `New Review Received!\n\nName: ${newReview.name}\nCategory: ${newReview.category}\nRating: ${newReview.rating} Stars\nReview: ${newReview.comment}\n\nDate: ${newReview.date}`;
+                const mailtoLink = `mailto:bankolegabriel91@yahoo.com?subject=New Town Planning Review from ${newReview.name}&body=${encodeURIComponent(emailBody)}`;
+                window.location.href = mailtoLink;
+            })
+            .catch((error) => {
+                console.error("Error adding review: ", error);
+                status.style.color = "#ff6b6b";
+                status.innerText = "❌ Error: Could not save to cloud. Ensure Firestore rules are set to public.";
+                submitBtn.disabled = false;
+            });
     });
 }
 
