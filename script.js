@@ -236,13 +236,20 @@ if (reviewForm) {
         reviews.push(newReview);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
 
+        // Send Email Notification (using mailto for simplicity since we don't have a backend)
+        const emailBody = `New Review Received!\n\nName: ${newReview.name}\nCategory: ${newReview.category}\nRating: ${newReview.rating} Stars\nReview: ${newReview.comment}\n\nDate: ${newReview.date}`;
+        const mailtoLink = `mailto:bankolegabriel91@yahoo.com?subject=New Town Planning Review from ${newReview.name}&body=${encodeURIComponent(emailBody)}`;
+
         // UI Feedback
         status.style.color = "#FFD700";
-        status.innerText = "✅ Review posted successfully!";
+        status.innerText = "✅ Review posted successfully! Opening your email client to notify the admin...";
         reviewForm.reset();
 
         // Refresh list
         loadReviews();
+
+        // Trigger email client
+        window.location.href = mailtoLink;
     });
 }
 
