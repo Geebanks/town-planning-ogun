@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Town Planning Offices – Ogun State</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html" class="active">Office Directory</a></li>
+            <li><a href="requirements.html">Permit Requirements</a></li>
+            <li><a href="nitp.html">NITP & Professional Bodies</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1>📍 Ogun State Town Planning Offices</h1>
+        <p class="subtitle">Ministry of Physical Planning and Urban Development</p>
+        <div class="search-container">
+            <input type="text" id="searchBar" placeholder="Type a town (e.g., Abeokuta) to view offices..."
+                onkeyup="if(event.key === 'Enter') filterOffices()">
+            <button id="searchBtn" onclick="filterOffices()">🔍 Search</button>
+        </div>
+    </header>
+
+    <main id="officeList"></main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

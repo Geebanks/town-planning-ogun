@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permit Requirements – Ogun State Town Planning</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">Office Directory</a></li>
+            <li><a href="requirements.html" class="active">Permit Requirements</a></li>
+            <li><a href="nitp.html">NITP & Professional Bodies</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>📋 Permit Requirements</h1>
+        <p class="subtitle">Official Documentation Checklist by Category</p>
+        <button id="downloadPdf" class="download-btn">📥 Download PDF Checklist</button>
+    </header>
+
+    <main class="requirements-container">
+
+        <!-- Standard Requirements (Common to All) -->
+        <section class="request-section standard">
+            <div class="section-title">
+                <span class="icon">📜</span>
+                <h2>Standard Requirements (All Applications)</h2>
+            </div>
+            <div class="info-card">
+                <ul class="doc-list">
+                    <li>
+                        <strong>Application Form:</strong>
+                        <p>Purchased from the nearest OGPDPA Area Planning Office.</p>
+                    </li>
+                    <li>
+                        <strong>Original Survey Plan:</strong>
+                        <p>Must be registered and verifiable.</p>
+                    </li>
+                    <li>
+                        <strong>Land Title Documents:</strong>
+                        <p>Certificate of Occupancy (C of O), Deed of Assignment, or Governor's Consent. <em>Must be
+                                duly Stamp Dutied.</em></p>
+                    </li>
+                    <li>
+                        <strong>Tax Clearance Certificate:</strong>
+                        <p>Current tax clearance certificate of the applicant.</p>
+                    </li>
+                    <li>
+                        <strong>Site Photographs:</strong>
+                        <p>Current photographs showing the state of the land.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Residential Requirements -->
+        <section class="request-section residential">
+            <div class="section-title">
+                <span class="icon">🏠</span>
+                <h2>Residential Permits</h2>
+            </div>
+            <div class="info-card">
+                <ul class="doc-list">
+                    <li>
+                        <strong>Architectural Drawings (5 Sets):</strong>
+                        <p>Signed and sealed by an ARCON registered architect.</p>
+                    </li>
+                    <li>
+                        <strong>Structural Drawings (5 Sets):</strong>
+                        <p>Mandatory for residential buildings with <strong>one or more suspended floors</strong>.
+                            Signed and sealed by a COREN registered structural engineer.</p>
+                    </li>
+                    <li>
+                        <strong>Site Layout Plan:</strong>
+                        <p>Showing setbacks and drainage flow.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Commercial / Industrial / Public Requirements -->
+        <section class="request-section commercial">
+            <div class="section-title">
+                <span class="icon">🏢</span>
+                <h2>Commercial, Industrial & Public Buildings</h2>
+            </div>
+            <div class="info-card">
+                <ul class="doc-list">
+                    <li>
+                        <strong>Architectural Drawings (5 Sets):</strong>
+                        <p>Complete set signed and sealed by ARCON registered architect.</p>
+                    </li>
+                    <li>
+                        <strong>Structural Drawings (5 Sets):</strong>
+                        <p>Mandatory for all commercial buildings. Must be signed and sealed by COREN registered
+                            structural engineer.</p>
+                    </li>
+                    <li>
+                        <strong>Electrical Drawings (5 Sets):</strong>
+                        <p>Comprehensive electrical layout and designs.</p>
+                    </li>
+                    <li>
+                        <strong>Mechanical Drawings (5 Sets):</strong>
+                        <p>Plumbing and HVAC layouts as applicable.</p>
+                    </li>
+                    <li>
+                        <strong>Physical Planning Audit Report (2 Sets):</strong>
+                        <p>Mandatory for audit and compliance verification.</p>
+                    </li>
+                    <li>
+                        <strong>Traffic Impact Assessment Report (2 Sets):</strong>
+                        <p>Required to assess the impact of the development on surrounding traffic.</p>
+                    </li>
+                    <li>
+                        <strong>Environmental Impact Assessment (EIA):</strong>
+                        <p>Mandatory for factories, shopping complexes, filling stations, and public institutions.</p>
+                    </li>
+                    <li>
+                        <strong>Soil Test Report:</strong>
+                        <p>Required for technical verification of ground conditions.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Ogun State Planning Directory • Ministry of Physical Planning and Urban Development</p>
+    </footer>
+
+    <!-- Firebase SDKs for matching functionality -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('downloadPdf').addEventListener('click', function () {
+            const element = document.querySelector('.requirements-container');
+            const opt = {
+                margin: 10,
+                filename: 'Ogun_Town_Planning_Requirements.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // New: Temporarily add a header for the PDF
+            const pdfHeader = `
+                <div style="text-align: center; color: #0b3d91; margin-bottom: 20px; font-family: Arial, sans-serif;">
+                    <h1 style="margin: 0;">OGUN STATE GOVERNMENT</h1>
+                    <h2 style="margin: 5px 0;">Ministry of Physical Planning and Urban Development</h2>
+                    <hr style="border: 1px solid #FFD700; margin-top: 10px;">
+                </div>
+            `;
+
+            const originalContent = element.innerHTML;
+            element.insertAdjacentHTML('afterbegin', pdfHeader);
+
+            html2pdf().from(element).set(opt).save().then(() => {
+                element.innerHTML = originalContent; // Restore after PDF is generated
+            });
+        });
+    </script>
+</body>
+
+</html>
