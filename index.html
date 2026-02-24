@@ -23,8 +23,16 @@
         </ul>
     </nav>
     <header>
-        <h1>📍 Ogun State Town Planning Offices</h1>
-        <p class="subtitle">Ministry of Physical Planning and Urban Development</p>
+        <h1>Planning Offices</h1>
+        <p class="subtitle">Search for Town Planning Offices across Ogun State</p>
+
+        <!-- PWA Install Banner -->
+        <div id="installBanner" class="install-banner" style="display: none;">
+            <p>📲 Install the Ogun Planning App for offline access!</p>
+            <button id="installBtn" class="download-btn"
+                style="margin-top: 5px; padding: 8px 20px; font-size: 0.8rem;">Install Now</button>
+        </div>
+
         <div class="search-container">
             <input type="text" id="searchBar" placeholder="Type a town (e.g., Abeokuta) to view offices..."
                 onkeyup="if(event.key === 'Enter') filterOffices()">
