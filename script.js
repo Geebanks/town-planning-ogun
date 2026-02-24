@@ -1,8 +1,7 @@
-// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAZ1EwPZMQjprqncxo04DUPG4BL0srvlms",
     authDomain: "town-planning-offices-in-ogun.firebaseapp.com",
-    databaseURL: "https://town-planning-offices-in-ogun-default-rtdb.firebaseio.app/",
+    databaseURL: "https://town-planning-offices-in-ogun-default-rtdb.europe-west1.firebasedatabase.app/",
     projectId: "town-planning-offices-in-ogun",
     storageBucket: "town-planning-offices-in-ogun.firebasestorage.app",
     messagingSenderId: "1049699052908",
@@ -185,12 +184,26 @@ window.loadReviews = function () {
     const container = document.getElementById('reviewsList');
     if (!container) return;
 
+    // Timeout Safety: If DB doesn't respond in 6 seconds
+    const timeoutTimer = setTimeout(() => {
+        if (container.innerHTML === "" || container.innerHTML.includes("Loading")) {
+            console.warn("Database load timeout.");
+            container.innerHTML = `
+                <div class="info-card" style="text-align: center;">
+                    <p>🕒 The cloud connection is taking longer than expected.</p>
+                    <p style="font-size: 0.8rem; opacity: 0.8;">Please ensure your internet is stable and your Firebase Rules are set to Public.</p>
+                    <button onclick="location.reload()" class="download-btn" style="margin-top: 10px; padding: 5px 15px;">Retry Connection</button>
+                </div>
+            `;
+        }
+    }, 6000);
+
     // Real-time listener from Realtime Database
-    // We use orderByKey() because Firebase push() keys are chronological
     db.ref(REVIEWS_NODE)
         .orderByKey()
         .limitToLast(20)
         .on('value', (snapshot) => {
+            clearTimeout(timeoutTimer); // Connection successful, clear timeout
             container.innerHTML = "";
 
             if (!snapshot.exists()) {
@@ -203,7 +216,6 @@ window.loadReviews = function () {
                 reviewsList.push(childSnapshot.val());
             });
 
-            // Reverse the array to show the most recent review at the top
             reviewsList.reverse().forEach((rev) => {
                 const stars = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
                 container.innerHTML += `
@@ -217,11 +229,12 @@ window.loadReviews = function () {
                 `;
             });
         }, (error) => {
+            clearTimeout(timeoutTimer);
             console.error("Database connection error:", error);
             container.innerHTML = `
                 <div class="error-message">
                     <span class="icon">⚠️</span>
-                    <p>Database Error: Please ensure you have enabled "Realtime Database" in your Firebase console and set Rules to "Test Mode".</p>
+                    <p>Connection Error: Make sure your Firebase Rules permit read/write access.</p>
                 </div>
             `;
         });
@@ -254,29 +267,37 @@ if (reviewForm) {
             timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-        // Disable button while sending
         submitBtn.disabled = true;
         status.style.color = "#FFD700";
-        status.innerText = "Processing your review...";
+        status.innerText = "☁️ Connecting to Google Cloud...";
+
+        // Submission Timeout
+        const submitTimeout = setTimeout(() => {
+            if (submitBtn.disabled) {
+                submitBtn.disabled = false;
+                status.style.color = "#ff6b6b";
+                status.innerText = "❌ Connection timed out. Please check your internet or Firebase Rules.";
+            }
+        }, 8000);
 
         // Save to Realtime Database
         db.ref(REVIEWS_NODE).push(newReview)
             .then(() => {
-                // UI Feedback
+                clearTimeout(submitTimeout);
                 status.style.color = "#FFD700";
-                status.innerText = "✅ Review posted successfully to the cloud!";
+                status.innerText = "✅ Review posted successfully!";
                 reviewForm.reset();
                 submitBtn.disabled = false;
 
-                // Send Email Notification (mailto)
                 const emailBody = `New Review Received!\n\nName: ${newReview.name}\nCategory: ${newReview.category}\nRating: ${newReview.rating} Stars\nReview: ${newReview.comment}\n\nDate: ${newReview.date}`;
                 const mailtoLink = `mailto:bankolegabriel91@yahoo.com?subject=New Town Planning Review from ${newReview.name}&body=${encodeURIComponent(emailBody)}`;
                 window.location.href = mailtoLink;
             })
             .catch((error) => {
+                clearTimeout(submitTimeout);
                 console.error("Error adding review: ", error);
                 status.style.color = "#ff6b6b";
-                status.innerText = "❌ Error: Could not save to cloud. Ensure Realtime Database rules are set to public.";
+                status.innerText = "❌ Database Error. Verify your Rules in Firebase Console.";
                 submitBtn.disabled = false;
             });
     });
