@@ -4,13 +4,31 @@
 }
 
 .main-nav {
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    padding: 15px 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    padding: 10px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .main-nav ul {
@@ -18,16 +36,15 @@
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    gap: 40px;
+    gap: 30px;
 }
 
 .main-nav a {
     color: #fff;
     text-decoration: none;
     font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s;
+    font-size: 0.95rem;
+    transition: all 0.3s;
     opacity: 0.8;
 }
 
@@ -35,6 +52,26 @@
 .main-nav a.active {
     color: #FFD700;
     opacity: 1;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background-color: #FFD700;
+    transition: all 0.3s ease;
+    border-radius: 3px;
 }
 
 body {
@@ -556,33 +593,140 @@ footer {
     }
 }
 
-@media (max-width: 600px) {
-    .search-container {
-        flex-direction: column;
-        border-radius: 20px;
-    }
-
-    header h1 {
-        font-size: 1.8rem;
-    }
-
-    .logo {
-        height: 60px;
-    }
-
+@media (max-width: 992px) {
     .main-nav ul {
-        gap: 20px;
+        gap: 15px;
+    }
+
+    .main-nav a {
+        font-size: 0.85rem;
     }
 
     .doc-list {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .main-nav ul {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: rgba(5, 30, 80, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        transition: 0.3s;
+        z-index: 999;
+    }
+
+    .main-nav ul.active {
+        left: 0;
+    }
+
+    .main-nav a {
+        font-size: 1.5rem;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .logo {
+        height: 65px;
+    }
+
+    header {
+        padding: 40px 15px;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    .search-container {
+        flex-direction: column;
+        border-radius: 20px;
+        gap: 10px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    header input {
+        border-radius: 12px;
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    #searchBtn {
+        width: 100%;
+        justify-content: center;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .rating-input label {
+        font-size: 2.5rem;
     }
 
     .info-card {
         padding: 20px;
     }
 
+    .section-title {
+        width: 100%;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
     .section-title h2 {
         font-size: 1.1rem;
+    }
+
+    .reviews-grid,
+    #officeList {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.7rem;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .download-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
 }
