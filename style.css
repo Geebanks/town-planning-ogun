@@ -790,16 +790,20 @@ footer {
     }
 
     .error-message {
-        padding: 10px 15px;
-        max-width: 95%;
+        padding: 8px 12px;
+        max-width: 92%;
         margin: 10px auto;
+        border-left-width: 4px;
     }
 
     .error-message p {
-        font-size: 0.9rem;
+        font-size: 0.82rem;
+        word-wrap: break-word;
+        line-height: 1.2;
     }
 
     .error-message .icon {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        margin-bottom: 2px;
     }
 }

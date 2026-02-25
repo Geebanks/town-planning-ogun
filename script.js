@@ -9,13 +9,16 @@ const firebaseConfig = {
     measurementId: "G-L312BQD5FL"
 };
 
-// Initialize Firebase using the Compat SDK (works without modules)
-firebase.initializeApp(firebaseConfig);
-
-try {
-    firebase.analytics();
-} catch (e) {
-    console.warn("Analytics blocked or failing in local environment.", e);
+// Initialize Firebase using the Compat SDK (works without modules) if available
+if (typeof firebase !== 'undefined') {
+    firebase.initializeApp(firebaseConfig);
+    try {
+        firebase.analytics();
+    } catch (e) {
+        console.warn("Analytics blocked or failing in local environment.", e);
+    }
+} else {
+    console.log("Firebase SDK not detected. Some features may be disabled.");
 }
 
 // List of Town Planning Offices in Ogun State
