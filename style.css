@@ -23,12 +23,21 @@
 }
 
 .logo-text {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 800;
     color: #FFD700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-text::before {
+    content: "🏛️";
+    font-size: 1.4rem;
 }
 
 .main-nav ul {
@@ -718,6 +727,11 @@ footer {
     }
 
     .logo-text {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    .logo-text::before {
         font-size: 1.2rem;
     }
 
