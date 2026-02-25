@@ -621,18 +621,22 @@ footer {
         display: flex;
     }
 
+    .main-nav {
+        padding: 5px 0;
+    }
+
     .main-nav ul {
         position: fixed;
-        top: 60px;
+        top: 50px;
         left: -100%;
         width: 100%;
-        height: calc(100vh - 60px);
-        background: rgba(5, 30, 80, 0.95);
+        height: calc(100vh - 50px);
+        background: rgba(5, 30, 80, 0.98);
         backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 40px;
+        gap: 30px;
         transition: 0.3s;
         z-index: 999;
     }
@@ -642,7 +646,7 @@ footer {
     }
 
     .main-nav a {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
     .menu-toggle.active span:nth-child(1) {
@@ -657,67 +661,79 @@ footer {
         transform: translateY(-9px) rotate(-45deg);
     }
 
+    header {
+        padding: 30px 15px;
+    }
+
     header h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin: 10px 0 5px;
     }
 
     .logo {
-        height: 65px;
-    }
-
-    header {
-        padding: 40px 15px;
+        height: 50px;
     }
 
     .subtitle {
-        font-size: 1rem;
+        font-size: 0.85rem;
         letter-spacing: 1px;
+        margin-bottom: 20px;
     }
 
     .search-container {
         flex-direction: column;
-        border-radius: 20px;
-        gap: 10px;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        gap: 8px;
+        padding: 10px;
     }
 
     header input {
-        border-radius: 12px;
-        width: 100%;
-        text-align: center;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 1rem;
     }
 
     #searchBtn {
-        width: 100%;
-        justify-content: center;
-        padding: 15px;
-        border-radius: 12px;
+        padding: 12px;
+        font-size: 0.85rem;
+        border-radius: 8px;
     }
 
     .rating-input label {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .info-card {
-        padding: 20px;
+        padding: 15px;
+        border-radius: 15px;
     }
 
     .section-title {
-        width: 100%;
-        justify-content: center;
-        border-radius: 12px;
+        padding: 8px 20px;
     }
 
     .section-title h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+
+    .office-card,
+    .review-card {
+        padding: 15px;
+    }
+
+    .office-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .office-card p,
+    .review-card .comment {
+        font-size: 0.85rem;
     }
 
     .reviews-grid,
     #officeList {
-        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 15px;
     }
 }
 
