@@ -22,6 +22,12 @@
     align-items: center;
 }
 
+.logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
 .logo-text {
     font-size: 1.2rem;
     font-weight: 800;
